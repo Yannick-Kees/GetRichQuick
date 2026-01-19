@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Stock screening CLI application."""
+
 from datetime import datetime
 from pathlib import Path
 
@@ -139,13 +141,13 @@ def screen(
                 click.echo(f"  - {warning}")
 
         if results.results:
-            click.echo(f"\nTop 5 worst performers:")
+            click.echo("\nTop 5 worst performers:")
             for i, result in enumerate(results.results[:5], 1):
                 click.echo(
                     f"  {i}. {result.ticker} ({result.company_name}): "
                     f"{result.worst_5day_performance.return_pct:.2f}% "
                     f"({result.worst_5day_performance.start_date} to "
-                    f"{result.worst_5day_performance.end_date})"
+                    f"{result.worst_5day_performance.end_date})",
                 )
 
         click.echo(f"\nResults saved to: {output}")
@@ -250,8 +252,8 @@ def backtest(
       uv run src/main.py backtest --index SP500 --country USA --lookback-years 3 --investment 100
     """
     from .backtesting.engine import BacktestEngine
-    from .backtesting.reporter import print_backtest_summary, save_backtest_results
     from .backtesting.plotter import generate_backtest_plots
+    from .backtesting.reporter import print_backtest_summary, save_backtest_results
 
     # Set log level
     if verbose:

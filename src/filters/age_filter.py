@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Filter companies by age."""
+
 from datetime import datetime
 
 import pandas as pd
@@ -34,7 +36,7 @@ def filter_by_age(df: pd.DataFrame, min_age_years: int) -> pd.DataFrame:
 
     logger.info(
         f"Age filter (>= {min_age_years} years): {len(filtered_df)} companies passed, "
-        f"{excluded_count} excluded"
+        f"{excluded_count} excluded",
     )
 
     return filtered_df
@@ -54,9 +56,7 @@ def get_companies_older_than(df: pd.DataFrame, founding_year: int) -> pd.DataFra
     return df[df["founding_year"] < founding_year].copy()
 
 
-def get_companies_in_age_range(
-    df: pd.DataFrame, min_age: int, max_age: int
-) -> pd.DataFrame:
+def get_companies_in_age_range(df: pd.DataFrame, min_age: int, max_age: int) -> pd.DataFrame:
     """
     Get companies within an age range.
 

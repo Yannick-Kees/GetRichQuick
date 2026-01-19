@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Load and validate company metadata from CSV."""
+
 from datetime import datetime
 from pathlib import Path
 
@@ -48,9 +50,7 @@ def load_metadata(csv_path: Path) -> pd.DataFrame:
         removed_count = original_count - len(df)
 
         if removed_count > 0:
-            logger.warning(
-                f"Removed {removed_count} companies with missing founding_year data"
-            )
+            logger.warning(f"Removed {removed_count} companies with missing founding_year data")
 
         # Convert founding_year to int
         df["founding_year"] = df["founding_year"].astype(int)
@@ -63,9 +63,7 @@ def load_metadata(csv_path: Path) -> pd.DataFrame:
             try:
                 # Validate founding year range
                 if not 1600 <= row["founding_year"] <= current_year:
-                    invalid_rows.append(
-                        (idx, f"Invalid founding year: {row['founding_year']}")
-                    )
+                    invalid_rows.append((idx, f"Invalid founding year: {row['founding_year']}"))
                     continue
 
                 # Validate index

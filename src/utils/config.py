@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Application configuration."""
+
 from dataclasses import dataclass
 from pathlib import Path
 

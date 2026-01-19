@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Fetch index constituents from Wikipedia."""
+
 import pandas as pd
 
 from ..utils.logger import setup_logger
@@ -24,9 +26,7 @@ def fetch_sp500_tickers() -> list[str]:
         logger.info(f"Fetching S&P 500 constituents from {url}")
 
         # Add headers to avoid 403 Forbidden
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         tables = pd.read_html(url, storage_options=headers)
         df = tables[0]  # First table contains current constituents
 
@@ -55,9 +55,7 @@ def fetch_dax_tickers() -> list[str]:
         logger.info(f"Fetching DAX constituents from {url}")
 
         # Add headers to avoid 403 Forbidden
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         tables = pd.read_html(url, storage_options=headers)
 
         # Find the table with constituents (usually has 'Ticker' or 'Company' column)
@@ -106,9 +104,7 @@ def fetch_ftse100_tickers() -> list[str]:
         logger.info(f"Fetching FTSE 100 constituents from {url}")
 
         # Add headers to avoid 403 Forbidden
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
         tables = pd.read_html(url, storage_options=headers)
 
         # Find the table with constituents
@@ -166,8 +162,7 @@ def fetch_index_tickers(index_name: str) -> list[str]:
 
     if index_name not in index_fetchers:
         raise ValueError(
-            f"Unsupported index: {index_name}. "
-            f"Supported indices: {list(index_fetchers.keys())}"
+            f"Unsupported index: {index_name} " f"Supported indices: {list(index_fetchers.keys())}",
         )
 
     return index_fetchers[index_name]()

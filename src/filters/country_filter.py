@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Filter companies by country."""
+
 import pandas as pd
 
 from ..utils.logger import setup_logger
@@ -37,7 +39,7 @@ def filter_by_country(df: pd.DataFrame, countries: list[str] | None = None) -> p
 
     logger.info(
         f"Country filter ({', '.join(countries)}): {len(filtered_df)} companies passed, "
-        f"{excluded_count} excluded"
+        f"{excluded_count} excluded",
     )
 
     return filtered_df

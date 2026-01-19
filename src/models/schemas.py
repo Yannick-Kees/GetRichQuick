@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Pydantic models for type safety and data validation."""
+
 from datetime import datetime
 from typing import Optional
 
@@ -69,13 +71,9 @@ class ScreeningMetadata(BaseModel):
     screening_date: str = Field(..., description="ISO timestamp of screening")
     filters_applied: dict = Field(..., description="Filters applied during screening")
     total_candidates: int = Field(..., description="Total tickers in selected indices")
-    companies_with_metadata: int = Field(
-        ..., description="Companies with founding data in CSV"
-    )
+    companies_with_metadata: int = Field(..., description="Companies with founding data in CSV")
     companies_screened: int = Field(..., description="Companies that passed all filters")
-    excluded_no_metadata: int = Field(
-        ..., description="Companies excluded due to missing metadata"
-    )
+    excluded_no_metadata: int = Field(..., description="Companies excluded due to missing metadata")
     excluded_too_young: int = Field(..., description="Companies excluded due to age filter")
 
 

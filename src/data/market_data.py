@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Fetch market data using yfinance with retry logic."""
+
 import time
 from datetime import datetime, timedelta
 
@@ -17,9 +19,7 @@ logger = setup_logger(__name__)
 
 @retry(
     stop=stop_after_attempt(config.RETRY_ATTEMPTS),
-    wait=wait_exponential(
-        multiplier=1, min=config.RETRY_MIN_WAIT, max=config.RETRY_MAX_WAIT
-    ),
+    wait=wait_exponential(multiplier=1, min=config.RETRY_MIN_WAIT, max=config.RETRY_MAX_WAIT),
 )
 def fetch_stock_history(ticker: str, lookback_days: int = 1825) -> pd.DataFrame:
     """
@@ -40,9 +40,7 @@ def fetch_stock_history(ticker: str, lookback_days: int = 1825) -> pd.DataFrame:
         end_date = datetime.now()
         start_date = end_date - timedelta(days=lookback_days)
 
-        logger.debug(
-            f"Fetching data for {ticker} from {start_date.date()} to {end_date.date()}"
-        )
+        logger.debug(f"Fetching data for {ticker} from {start_date.date()} to {end_date.date()}")
 
         stock = yf.Ticker(ticker)
         hist = stock.history(start=start_date, end=end_date)
@@ -60,7 +58,9 @@ def fetch_stock_history(ticker: str, lookback_days: int = 1825) -> pd.DataFrame:
 
 
 def fetch_multiple_stocks(
-    tickers: list[str], lookback_days: int = 1825, rate_limit: bool = True
+    tickers: list[str],
+    lookback_days: int = 1825,
+    rate_limit: bool = True,
 ) -> dict[str, pd.DataFrame]:
     """
     Fetch historical data for multiple stocks with rate limiting.
@@ -94,8 +94,7 @@ def fetch_multiple_stocks(
             continue
 
     logger.info(
-        f"Successfully fetched {len(results)}/{total} stocks "
-        f"({total - len(results)} failed)"
+        f"Successfully fetched {len(results)}/{total} stocks " f"({total - len(results)} failed)",
     )
 
     return results

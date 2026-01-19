@@ -1,13 +1,15 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Generate backtest reports."""
+
 import json
 from datetime import datetime
 from pathlib import Path
 
-from .engine import BacktestResult
 from ..utils.logger import setup_logger
+from .engine import BacktestResult
 
 logger = setup_logger(__name__)
 
@@ -65,7 +67,7 @@ def save_backtest_results(result: BacktestResult, output_path: Path) -> None:
         # Save to file
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, "w") as f:
+        with Path.open(output_path, "w") as f:
             json.dump(output_dict, f, indent=2)
 
         logger.info(f"\nResults saved to: {output_path}")
@@ -138,7 +140,7 @@ def print_backtest_summary(result: BacktestResult) -> None:
             pnl_pct = trade.pnl / (trade.entry_price * trade.shares) * 100
             print(
                 f"  {i}. {trade.ticker:6s} - ${trade.pnl:7.2f} ({pnl_pct:+6.1f}%) "
-                f"- {trade.holding_days:3d} days - {trade.entry_date} to {trade.exit_date}"
+                f"- {trade.holding_days:3d} days - {trade.entry_date} to {trade.exit_date}",
             )
 
         if len(closed_trades) >= 5:
@@ -147,7 +149,7 @@ def print_backtest_summary(result: BacktestResult) -> None:
                 pnl_pct = trade.pnl / (trade.entry_price * trade.shares) * 100
                 print(
                     f"  {i}. {trade.ticker:6s} - ${trade.pnl:7.2f} ({pnl_pct:+6.1f}%) "
-                    f"- {trade.holding_days:3d} days - {trade.entry_date} to {trade.exit_date}"
+                    f"- {trade.holding_days:3d} days - {trade.entry_date} to {trade.exit_date}",
                 )
 
     print("=" * 80)

@@ -1,15 +1,17 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Generate plots for backtest results."""
+
 from datetime import datetime
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 
-from .engine import BacktestResult
 from ..utils.logger import setup_logger
+from .engine import BacktestResult
 
 logger = setup_logger(__name__)
 
@@ -54,9 +56,7 @@ def plot_cumulative_pnl(result: BacktestResult, output_path: Path) -> None:
         # Styling
         ax.set_xlabel("Date", fontsize=12, fontweight="bold")
         ax.set_ylabel("Cumulative P&L ($)", fontsize=12, fontweight="bold")
-        ax.set_title(
-            "Cumulative Profit & Loss Over Time", fontsize=14, fontweight="bold", pad=20
-        )
+        ax.set_title("Cumulative Profit & Loss Over Time", fontsize=14, fontweight="bold", pad=20)
 
         # Format x-axis dates
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
@@ -161,9 +161,7 @@ def plot_holding_period_distribution(result: BacktestResult, output_path: Path) 
         # Styling
         ax.set_xlabel("Holding Period (Days)", fontsize=12, fontweight="bold")
         ax.set_ylabel("Number of Trades", fontsize=12, fontweight="bold")
-        ax.set_title(
-            "Distribution of Holding Periods", fontsize=14, fontweight="bold", pad=20
-        )
+        ax.set_title("Distribution of Holding Periods", fontsize=14, fontweight="bold", pad=20)
 
         # Grid
         ax.grid(True, axis="y", alpha=0.3, linestyle="--")

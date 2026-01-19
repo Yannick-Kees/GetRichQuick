@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Main stock screening orchestration logic."""
+
 import json
 from datetime import datetime
 from pathlib import Path
@@ -73,7 +75,8 @@ class ScreeningEngine:
         # Step 3: Filter by available metadata
         logger.info("\n[Step 3/6] Filtering by available metadata...")
         filtered_df, total_candidates, excluded_no_metadata = self._filter_by_metadata(
-            all_tickers, metadata_df
+            all_tickers,
+            metadata_df,
         )
 
         # Step 4: Apply age and country filters
@@ -83,7 +86,9 @@ class ScreeningEngine:
         if len(filtered_df) == 0:
             logger.warning("No companies passed all filters!")
             return self._create_empty_output(
-                total_candidates, excluded_no_metadata, excluded_too_young
+                total_candidates,
+                excluded_no_metadata,
+                excluded_too_young,
             )
 
         # Step 5: Fetch market data
@@ -137,7 +142,9 @@ class ScreeningEngine:
             raise
 
     def _filter_by_metadata(
-        self, all_tickers: list[str], metadata_df: pd.DataFrame
+        self,
+        all_tickers: list[str],
+        metadata_df: pd.DataFrame,
     ) -> tuple[pd.DataFrame, int, int]:
         """Filter tickers to only those with metadata."""
         total_candidates = len(all_tickers)
@@ -149,12 +156,12 @@ class ScreeningEngine:
 
         logger.info(
             f"Companies with metadata: {len(filtered_df)}/{total_candidates} "
-            f"({excluded_no_metadata} excluded)"
+            f"({excluded_no_metadata} excluded)",
         )
 
         if excluded_no_metadata > 0:
             self.warnings.append(
-                f"{excluded_no_metadata} companies excluded due to missing founding data in CSV"
+                f"{excluded_no_metadata} companies excluded due to missing founding data in CSV",
             )
 
         return filtered_df, total_candidates, excluded_no_metadata
@@ -181,19 +188,23 @@ class ScreeningEngine:
         tickers = df["ticker"].tolist()
 
         market_data_dict = market_data.fetch_multiple_stocks(
-            tickers, lookback_days=self.lookback_days
+            tickers,
+            lookback_days=self.lookback_days,
         )
 
         failed_count = len(tickers) - len(market_data_dict)
         if failed_count > 0:
             self.warnings.append(
-                f"{failed_count} tickers failed to fetch from Yahoo Finance (rate limited or delisted)"
+                f"{failed_count} tickers failed to fetch from "
+                f"Yahoo Finance (rate limited or delisted)",
             )
 
         return market_data_dict
 
     def _calculate_and_rank(
-        self, df: pd.DataFrame, market_data_dict: dict
+        self,
+        df: pd.DataFrame,
+        market_data_dict: dict,
     ) -> list[ScreeningResult]:
         """Calculate performance and create ranked results."""
         # Calculate worst 5-day performance for all stocks
@@ -248,7 +259,10 @@ class ScreeningEngine:
         return ScreeningOutput(metadata=metadata, results=results, warnings=self.warnings)
 
     def _create_empty_output(
-        self, total_candidates: int, excluded_no_metadata: int, excluded_too_young: int
+        self,
+        total_candidates: int,
+        excluded_no_metadata: int,
+        excluded_too_young: int,
     ) -> ScreeningOutput:
         """Create output when no results found."""
         metadata = ScreeningMetadata(
@@ -283,7 +297,7 @@ class ScreeningEngine:
             # Save to file
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
-            with open(output_path, "w") as f:
+            with Path.open(output_path, "w") as f:
                 json.dump(output_dict, f, indent=2)
 
             logger.info(f"\nResults saved to: {output_path}")

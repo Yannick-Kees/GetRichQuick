@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Calculate and filter by stock performance."""
+
 import pandas as pd
 
 from ..models.schemas import WorstPerformance
@@ -78,7 +80,7 @@ def calculate_worst_5day_performance(hist: pd.DataFrame) -> WorstPerformance | N
 
 
 def calculate_performance_for_multiple(
-    market_data: dict[str, pd.DataFrame]
+    market_data: dict[str, pd.DataFrame],
 ) -> dict[str, WorstPerformance]:
     """
     Calculate worst 5-day performance for multiple stocks.
@@ -106,15 +108,13 @@ def calculate_performance_for_multiple(
             logger.error(f"Failed to calculate performance for {ticker}: {e}")
             continue
 
-    logger.info(
-        f"Successfully calculated performance for {len(results)}/{len(market_data)} stocks"
-    )
+    logger.info(f"Successfully calculated performance for {len(results)}/{len(market_data)} stocks")
 
     return results
 
 
 def rank_by_worst_performance(
-    performance_data: dict[str, WorstPerformance]
+    performance_data: dict[str, WorstPerformance],
 ) -> list[tuple[str, WorstPerformance]]:
     """
     Rank stocks by worst performance (most negative first).
@@ -130,14 +130,15 @@ def rank_by_worst_performance(
 
     logger.info(
         f"Ranked {len(ranked)} stocks by worst performance "
-        f"(worst: {ranked[0][1].return_pct:.2f}%)"
+        f"(worst: {ranked[0][1].return_pct:.2f}%)",
     )
 
     return ranked
 
 
 def get_top_n_worst_performers(
-    performance_data: dict[str, WorstPerformance], n: int
+    performance_data: dict[str, WorstPerformance],
+    n: int,
 ) -> list[tuple[str, WorstPerformance]]:
     """
     Get top N worst performing stocks.

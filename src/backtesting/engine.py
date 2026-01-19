@@ -1,7 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Yannick Kees
+# SPDX-FileCopyrightText: 2026 Yannick Kees
 #
 # SPDX-License-Identifier: MIT
 """Backtesting engine for mean reversion strategy."""
+
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta
@@ -174,11 +176,12 @@ class BacktestEngine:
         lookback_days = self.lookback_years * 365 + 30  # Extra buffer
 
         self.all_historical_data = market_data.fetch_multiple_stocks(
-            tickers, lookback_days=lookback_days
+            tickers,
+            lookback_days=lookback_days,
         )
 
         logger.info(
-            f"Successfully fetched data for {len(self.all_historical_data)}/{len(tickers)} tickers"
+            f"Successfully fetched data for {len(self.all_historical_data)}/{len(tickers)} tickers",
         )
 
     def _simulate_screenings(self) -> None:
@@ -255,7 +258,7 @@ class BacktestEngine:
                     "entry_price": float(current_price),
                     "target_price": perf.start_price,
                     "company_name": ticker,  # Will be updated later if needed
-                }
+                },
             )
 
         if not candidates:
@@ -268,7 +271,7 @@ class BacktestEngine:
         worst = candidates[0]
         logger.info(
             f"  Found: {worst['ticker']} (return: {worst['return_pct']:.2f}%, "
-            f"entry: ${worst['entry_price']:.2f}, target: ${worst['target_price']:.2f})"
+            f"entry: ${worst['entry_price']:.2f}, target: ${worst['target_price']:.2f})",
         )
 
         return worst
@@ -286,7 +289,7 @@ class BacktestEngine:
         if stock_info["target_price"] <= stock_info["entry_price"]:
             logger.warning(
                 f"  SKIPPED {ticker}: target_price ({stock_info['target_price']:.2f}) "
-                f"<= entry_price ({stock_info['entry_price']:.2f})"
+                f"<= entry_price ({stock_info['entry_price']:.2f})",
             )
             return
 
@@ -304,7 +307,7 @@ class BacktestEngine:
         self.open_positions[ticker] = trade
         logger.info(
             f"  OPENED: {ticker} - {shares:.4f} shares @ ${stock_info['entry_price']:.2f} "
-            f"(target: ${stock_info['target_price']:.2f})"
+            f"(target: ${stock_info['target_price']:.2f})",
         )
 
     def _update_open_positions(self, current_date: datetime) -> None:
@@ -317,7 +320,8 @@ class BacktestEngine:
                 continue
 
             current_price = market_data.get_price_on_date(
-                self.all_historical_data[ticker], current_date
+                self.all_historical_data[ticker],
+                current_date,
             )
 
             if current_price is None:
@@ -331,9 +335,7 @@ class BacktestEngine:
         for ticker, exit_price, exit_date in positions_to_close:
             self._close_position(ticker, exit_price, exit_date)
 
-    def _close_position(
-        self, ticker: str, exit_price: float, exit_date: datetime
-    ) -> None:
+    def _close_position(self, ticker: str, exit_price: float, exit_date: datetime) -> None:
         """Close a trading position."""
         if ticker not in self.open_positions:
             return
@@ -355,7 +357,7 @@ class BacktestEngine:
 
         logger.info(
             f"  CLOSED: {ticker} - held {holding_days} days, "
-            f"P&L: ${pnl:.2f} ({(pnl / self.investment_per_trade * 100):.1f}%)"
+            f"P&L: ${pnl:.2f} ({(pnl / self.investment_per_trade * 100):.1f}%)",
         )
 
         # Move to closed trades
@@ -371,7 +373,8 @@ class BacktestEngine:
                 continue
 
             current_price = market_data.get_price_on_date(
-                self.all_historical_data[ticker], current_date
+                self.all_historical_data[ticker],
+                current_date,
             )
 
             if current_price is not None:
@@ -394,9 +397,7 @@ class BacktestEngine:
         # Calculate holding days statistics
         closed_holding_days = [t.holding_days for t in self.closed_trades if t.holding_days]
         avg_holding_days = (
-            sum(closed_holding_days) / len(closed_holding_days)
-            if closed_holding_days
-            else 0
+            sum(closed_holding_days) / len(closed_holding_days) if closed_holding_days else 0
         )
 
         # Create holding days distribution
@@ -410,9 +411,7 @@ class BacktestEngine:
         logger.info(f"Total P&L: ${total_pnl:.2f}")
         logger.info(f"Total invested: ${total_invested:.2f}")
         logger.info(
-            f"Return: {(total_pnl / total_invested * 100):.2f}%"
-            if total_invested > 0
-            else "N/A"
+            f"Return: {(total_pnl / total_invested * 100):.2f}%" if total_invested > 0 else "N/A",
         )
         logger.info(f"Average holding days: {avg_holding_days:.1f}")
 
