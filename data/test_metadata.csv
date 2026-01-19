@@ -1,0 +1,4 @@
+ticker,company_name,founding_year,country,index,notes
+JPM,JPMorgan Chase & Co.,1799,USA,SP500,Test company 1
+PG,Procter & Gamble Company,1837,USA,SP500,Test company 2
+KO,The Coca-Cola Company,1892,USA,SP500,Test company 3

@@ -1,0 +1,14 @@
+services:
+  stockmarketanalysis:
+    build: .
+    context: .
+    args:
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+    network_mode: host
+    container_name: python-script
+    image: registry.github.com:v07042024_1045
+    environment:
+      HTTP_PROXY: ${HTTP_PROXY:-}
+      HTTPS_PROXY: ${HTTPS_PROXY:-}
+      NO_PROXY: ${NO_PROXY:-}

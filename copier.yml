@@ -1,0 +1,123 @@
+# ============================================================================
+# Copier Configuration
+# ============================================================================
+
+# Metadata
+_min_copier_version: "9.0.0"
+
+# Template settings
+_templates_suffix: .jinja
+
+_answers_file: utils/copier-answers.yml
+
+
+# Jinja2 environment options
+_envops:
+  block_start_string: "{%"
+  block_end_string: "%}"
+  variable_start_string: "{{"
+  variable_end_string: "}}"
+  comment_start_string: "{#"
+  comment_end_string: "#}"
+  keep_trailing_newline: true
+  autoescape: false
+  trim_blocks: true
+  lstrip_blocks: true
+
+# Exclude patterns (files NOT to template)
+_exclude:
+  - .git
+  - .venv
+  - __pycache__
+  - "*.pyc"
+  - "*.pyo"
+  - "*.orig"
+  - ".DS_Store"
+  - ".copier-answers.yml"  # Don't template the answers file
+  - "*.egg-info"
+  - dist
+  - build
+
+# Skip if exists (don't overwrite these files on update)
+_skip_if_exists:
+  - .env
+  - .env.local
+
+# Jinja extensions (optional)
+_jinja_extensions:
+  - jinja2_time.TimeExtension
+
+# ============================================================================
+# Questions / Template Variables
+# ============================================================================
+
+project_name:
+  type: str
+  help: What is your project name?
+  placeholder: "my-awesome-project"
+  validator: >-
+    {% if not project_name %}
+    Project name is required
+    {% endif %}
+
+project_slug:
+  type: str
+  help: Project slug (for imports)
+  default: "{{ project_name.lower().replace('-', '_').replace(' ', '_') }}"
+
+project_description:
+  type: str
+  help: Short description of your project
+  default: ""
+  multiline: false
+
+author_name:
+  type: str
+  help: Your name
+
+author_email:
+  type: str
+  help: Your email
+
+
+# ============================================================================
+# Tasks (run after generation)
+# ============================================================================
+
+_tasks:
+  # Initialize git if not exists
+  - command: git init -b main
+    when: "{{ _stage == 'task'   }}"
+  
+
+
+# ============================================================================
+# Migrations (for template updates)
+# ============================================================================
+
+_migrations:
+  - version: "1.0.0"
+    before:
+      - command: echo "Migrating to version 1.0.0..."
+  
+  - version: "2.0.0"
+    before:
+      - command: echo "⚠️  Breaking changes in 2.0.0"
+    after:
+      - command: echo "✅ Migration to 2.0.0 complete"
+
+# ============================================================================
+# Message after generation
+# ============================================================================
+
+_message_after_copy: |
+  
+  🎉 Your project "{{ project_name }}" has been created!
+  
+
+_message_after_update: |
+  
+  ✅ Project updated successfully!
+
+
+
